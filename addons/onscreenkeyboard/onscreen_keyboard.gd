@@ -7,6 +7,7 @@ extends PanelContainer
 ###########################
 
 
+export (String) var closeOnInputEvent = ""
 export (String, FILE, "*.json") var customLayoutFile = null
 export (StyleBoxFlat) var styleBackground = null
 export (StyleBoxFlat) var styleHover = null
@@ -44,6 +45,18 @@ func _enter_tree():
 
 #func _process(delta):
 #	pass
+
+
+func _input(event: InputEvent) -> void:
+	if (
+			not InputMap.has_action(closeOnInputEvent)
+			or not event.is_action_released(closeOnInputEvent)
+		):
+		
+		return
+	
+	accept_event()
+	_hideKeyboard()
 
 
 ###########################

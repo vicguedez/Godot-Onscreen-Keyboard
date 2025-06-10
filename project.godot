@@ -16,7 +16,7 @@ config/icon="res://icon.png"
 
 [editor_plugins]
 
-enabled=PoolStringArray( "res://addons/onscreenkeyboard/plugin.cfg" )
+enabled=PoolStringArray(  )
 
 [gui]
 

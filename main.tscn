@@ -24,3 +24,4 @@ margin_top = 610.0
 margin_right = 278.0
 margin_bottom = 730.0
 script = ExtResource( 1 )
+closeOnInputEvent = "ui_cancel"
