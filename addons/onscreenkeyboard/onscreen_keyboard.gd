@@ -49,7 +49,8 @@ func _enter_tree():
 
 func _input(event: InputEvent) -> void:
 	if (
-			not InputMap.has_action(closeOnInputEvent)
+			not shown
+			or not InputMap.has_action(closeOnInputEvent)
 			or not event.is_action_released(closeOnInputEvent)
 		):
 		
@@ -92,7 +93,7 @@ func _initKeyboard():
 ###########################
 
 
-var focusObject = null
+var shown: bool = false
 
 
 func show():
@@ -104,14 +105,17 @@ func hide():
 
 
 func _hideKeyboard(keyData=null):
+	shown = false
+	
 	tweenPosition.interpolate_property(self,"rect_position",rect_position, Vector2(rect_position.x,get_viewport().get_visible_rect().size.y + 10), tweenSpeed, Tween.TRANS_SINE, Tween.EASE_OUT)
 	tweenPosition.start()
-	
 	_setCapsLock(false)
 	emit_signal("visibilityChanged",false)
 
 
 func _showKeyboard(keyData=null):
+	shown = true
+	
 	tweenPosition.interpolate_property(self,"rect_position",rect_position, Vector2(rect_position.x,get_viewport().get_visible_rect().size.y-rect_size.y), tweenSpeed, Tween.TRANS_SINE, Tween.EASE_OUT)
 	tweenPosition.start()
 	emit_signal("visibilityChanged",true)
@@ -365,21 +369,3 @@ func _loadFile(filePath):
 	var content = file.get_as_text()
 	file.close()
 	return content
-
-
-###########################
-## HELPER
-###########################
-
-
-func isKeyboardFocusObjectCompleteOnEnter(focusObject):
-	if focusObject.get_class() == "LineEdit":
-		return true
-	return false
-
-
-func isKeyboardFocusObject(focusObject):
-	if focusObject.get_class() == "LineEdit" or focusObject.get_class() == "TextEdit":
-		return true
-	return false
-
