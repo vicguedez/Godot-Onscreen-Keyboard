@@ -184,10 +184,20 @@ func _keyReleased(keyData):
 		var keyValue = keyData.get("output")
 		var keyUnicode = KeyListHandler.getUnicodeFromString(keyValue)
 		
-		if uppercase==false and KeyListHandler.hasLowercase(keyValue):
+		if keyUnicode == KEY_ENTER:
+			return
+		
+		if not uppercase and KeyListHandler.hasLowercase(keyValue):
 			keyUnicode +=32
 		
-		targetLineEdit.append_at_cursor(char(keyUnicode))
+		if keyUnicode == KEY_BACKSPACE:
+			targetLineEdit.delete_char_at_cursor()
+		elif keyUnicode == KEY_LEFT:
+			targetLineEdit.caret_position -= 1
+		elif keyUnicode == KEY_RIGHT:
+			targetLineEdit.caret_position += 1
+		else:
+			targetLineEdit.append_at_cursor(char(keyUnicode))
 		
 		_setCapsLock(false)
 
@@ -223,8 +233,8 @@ func _createKeyboard(layoutData):
 		set('custom_styles/panel', styleBackground)
 	
 	var index = 0
+	
 	for layout in data.get("layouts"):
-
 		var layoutContainer = PanelContainer.new()
 		
 		if styleBackground != null:
@@ -245,8 +255,8 @@ func _createKeyboard(layoutData):
 		baseVbox.size_flags_vertical = SIZE_EXPAND_FILL
 		
 		for row in layout.get("rows"):
-
 			var keyRow = HBoxContainer.new()
+			
 			keyRow.size_flags_horizontal = SIZE_EXPAND_FILL
 			keyRow.size_flags_vertical = SIZE_EXPAND_FILL
 			

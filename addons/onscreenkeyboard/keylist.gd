@@ -561,7 +561,6 @@ func getScancodeFromString(name, debug=false):
 			print("Key not found:"+ name)
 		return KEY_UNKNOWN
 
-
 func getUnicodeFromString(name, debug=false):
 	if keyListUnicode.has(str(name)):
 		if debug:
@@ -571,6 +570,3 @@ func getUnicodeFromString(name, debug=false):
 		if debug:
 			print("Key not found:"+ name)
 		return KEY_UNKNOWN
-
-func _ready():
-	pass # Replace with function body.
