@@ -35,9 +35,12 @@ signal layoutChanged
 
 func _enter_tree():
 	_initKeyboard()
+	_hideKeyboard()
+
 
 #func _exit_tree():
 #	pass
+
 
 #func _process(delta):
 #	pass
