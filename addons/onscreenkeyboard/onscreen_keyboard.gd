@@ -6,7 +6,7 @@ extends PanelContainer
 ## SETTINGS
 ###########################
 
-export (bool) var autoShow = true
+
 export (String, FILE, "*.json") var customLayoutFile = null
 export (StyleBoxFlat) var styleBackground = null
 export (StyleBoxFlat) var styleHover = null
@@ -18,19 +18,22 @@ export (Color) var fontColor = Color(1,1,1)
 export (Color) var fontColorHover = Color(1,1,1)
 export (Color) var fontColorPressed = Color(1,1,1)
 
+
 ###########################
 ## SIGNALS
 ###########################
 
+
 signal visibilityChanged
 signal layoutChanged
+
 
 ###########################
 ## PANEL 
 ###########################
 
+
 func _enter_tree():
-	get_tree().get_root().connect("size_changed", self, "size_changed")
 	_initKeyboard()
 
 #func _exit_tree():
@@ -39,17 +42,12 @@ func _enter_tree():
 #func _process(delta):
 #	pass
 
-func _input(event):
-	_updateAutoDisplayOnInput(event)
-
-func size_changed():
-	if autoShow:
-		_hideKeyboard()
-
 
 ###########################
 ## INIT
 ###########################
+
+
 var KeyboardButton
 var KeyListHandler
 
@@ -61,8 +59,8 @@ var uppercase = false
 var tweenPosition
 var tweenSpeed = .2
 
-func _initKeyboard():
 
+func _initKeyboard():
 	if customLayoutFile == null:
 		var defaultLayout = preload("default_layout.gd").new()
 		_createKeyboard(defaultLayout.data)
@@ -71,58 +69,27 @@ func _initKeyboard():
 	
 	tweenPosition = Tween.new()
 	add_child(tweenPosition)
-	
-	if autoShow:
-		_hideKeyboard()
 
 
 ###########################
 ## HIDE/SHOW
 ###########################
 
+
 var focusObject = null
+
 
 func show():
 	_showKeyboard()
-	
+
+
 func hide():
 	_hideKeyboard()
-
-var released = true
-func _updateAutoDisplayOnInput(event):
-	if autoShow == false:
-		return
-	
-	if event is InputEventMouseButton:
-		released = !released
-		if released == false:
-			return
-		
-		var focusObject = get_focus_owner()
-		if focusObject != null:
-			var clickOnInput = Rect2(focusObject.rect_global_position,focusObject.rect_size).has_point(get_global_mouse_position())
-			var clickOnKeyboard = Rect2(rect_global_position,rect_size).has_point(get_global_mouse_position())
-			
-			if clickOnInput:
-				if isKeyboardFocusObject(focusObject):
-					_showKeyboard()
-			elif clickOnKeyboard:
-				_showKeyboard()
-			else:
-				_hideKeyboard()
-					
-	if event is InputEventKey:
-		var focusObject = get_focus_owner()
-		if focusObject != null:
-			if event.scancode == KEY_ENTER:
-				if isKeyboardFocusObjectCompleteOnEnter(focusObject):
-					_hideKeyboard()
 
 
 func _hideKeyboard(keyData=null):
 	tweenPosition.interpolate_property(self,"rect_position",rect_position, Vector2(rect_position.x,get_viewport().get_visible_rect().size.y + 10), tweenSpeed, Tween.TRANS_SINE, Tween.EASE_OUT)
 	tweenPosition.start()
-	#grab_focus()
 	
 	_setCapsLock(false)
 	emit_signal("visibilityChanged",false)
@@ -138,9 +105,11 @@ func _showKeyboard(keyData=null):
 ##  KEY LAYOUT
 ###########################
 
+
 var prevPrevLayout = null
 var previousLayout = null
 var currentLayout = null
+
 
 func setActiveLayoutByName(name):
 	for layout in layouts:
@@ -153,7 +122,6 @@ func setActiveLayoutByName(name):
 func _showLayout(layout):
 	layout.show()
 	currentLayout = layout
-	
 
 
 func _hideLayout(layout):
@@ -179,12 +147,13 @@ func _switchLayout(keyData):
 			return
 	
 	_setCapsLock(false)
-	
-	
+
 
 ###########################
 ## KEY EVENTS
 ###########################
+
+var targetLineEdit: LineEdit
 
 func _setCapsLock(value):
 	uppercase = value
@@ -206,7 +175,6 @@ func _triggerUppercase(keyData):
 
 
 func _keyReleased(keyData):
-	
 	if keyData.has("output"):
 		var keyValue = keyData.get("output")
 		
@@ -239,9 +207,11 @@ func _keyReleased(keyData):
 ## CONSTRUCT KEYBOARD
 ###########################
 
+
 func _setKeyStyle(styleName, key, style):
 	if style != null:
 		key.set('custom_styles/'+styleName, style)
+
 
 func _createKeyboard(layoutData):
 	if layoutData == null:
@@ -362,6 +332,7 @@ func _createKeyboard(layoutData):
 ## LOAD SETTINGS
 ###########################
 
+
 func _loadJSON(filePath):
 	var content = JSON.parse(_loadFile(filePath))
 	
@@ -388,16 +359,15 @@ func _loadFile(filePath):
 ## HELPER
 ###########################
 
+
 func isKeyboardFocusObjectCompleteOnEnter(focusObject):
 	if focusObject.get_class() == "LineEdit":
 		return true
 	return false
 
+
 func isKeyboardFocusObject(focusObject):
 	if focusObject.get_class() == "LineEdit" or focusObject.get_class() == "TextEdit":
 		return true
 	return false
-
-
-
 
