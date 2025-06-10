@@ -156,7 +156,9 @@ func _switchLayout(keyData):
 ## KEY EVENTS
 ###########################
 
+
 var targetLineEdit: LineEdit
+
 
 func _setCapsLock(value):
 	uppercase = value
@@ -180,29 +182,13 @@ func _triggerUppercase(keyData):
 func _keyReleased(keyData):
 	if keyData.has("output"):
 		var keyValue = keyData.get("output")
-		
-		###########################
-		## DISPATCH InputEvent 
-		###########################
-		
-		var inputEventKey = InputEventKey.new()
-		inputEventKey.shift = uppercase
-		inputEventKey.alt = false
-		inputEventKey.meta = false
-		inputEventKey.command = false
-		inputEventKey.pressed = true
-		
 		var keyUnicode = KeyListHandler.getUnicodeFromString(keyValue)
+		
 		if uppercase==false and KeyListHandler.hasLowercase(keyValue):
 			keyUnicode +=32
-		inputEventKey.unicode = keyUnicode
-		inputEventKey.scancode = KeyListHandler.getScancodeFromString(keyValue)
-		get_tree().input_event(inputEventKey)
 		
+		targetLineEdit.append_at_cursor(char(keyUnicode))
 		
-		###########################
-		## DISABLE CAPSLOCK AFTER 
-		###########################
 		_setCapsLock(false)
 
 
