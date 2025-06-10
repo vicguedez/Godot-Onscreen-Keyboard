@@ -1,5 +1,10 @@
 ![Screenshot](addons/onscreenkeyboard/Screenshot.png "Screenshot")
 
+> [!WARNING]
+> This has been modified and does not work exactly like original version.
+> You have to set its a `targetLineEdit`.
+> You have to manually show/hide it.
+
 # Usage
 Onscreen Keyboard Plugin for Godot Engine. Displayed as soon as LineEdit or TextEdit are in focus.
 
